@@ -30,8 +30,14 @@
  "CouchDB"
  (docref/couchdb-doc example-couchdb-host example-couchdb-database initial-map))
 
-; MongoDB
+(docref/start-longpoll-thread example-couchdb-host example-couchdb-database)
 
+(def foo (docref/couchdb-doc example-couchdb-host example-couchdb-database {:foo :bar}))
+(add-watch foo :foo (fn [_ _ _ val] (println "Hello" val)))
+(docref/doc-update! foo (fn [_] {"test" "fest"}))
+
+; MongoDB
+(comment
 (def example-mongodb-database "example-database")
 (def example-mongodb-collection :example-collection)
 (mongodb/mongo! :db example-mongodb-database)
@@ -39,3 +45,4 @@
 (example
  "MongoDB"
  (docref/mongodb-doc example-mongodb-collection initial-map))
+)
